@@ -110,6 +110,32 @@ async function generateImages(keywords) {
     document.getElementById('imageResults').style.display = 'block';
 
     try {
+        // 判断风格词语的情感
+        const positiveStyles = ['温暖', '舒缓', '激情', '开心', '高兴'];
+        const negativeStyles = ['悲伤', '忧郁'];
+
+        const isPositive = keywords.some(style => positiveStyles.includes(style));
+        
+        // 根据风格选择图片主色调
+        let colorTheme;
+        if (isPositive) {
+            // 随机选择红色、橙色、黄色
+            const positiveColors = [
+                'rgba(255, 0, 0, 0.2)', // 红色
+                'rgba(255, 165, 0, 0.2)', // 橙色
+                'rgba(255, 255, 0, 0.2)' // 黄色
+            ];
+            colorTheme = positiveColors[Math.floor(Math.random() * positiveColors.length)];
+        } else {
+            // 随机选择蓝色、灰色、黑色
+            const negativeColors = [
+                'rgba(0, 0, 255, 0.2)', // 蓝色
+                'rgba(128, 128, 128, 0.2)', // 灰色
+                'rgba(0, 0, 0, 0.2)' // 黑色
+            ];
+            colorTheme = negativeColors[Math.floor(Math.random() * negativeColors.length)];
+        }
+
         // 使用更快的图片源
         const imageUrls = [
             `https://picsum.photos/800/600?random=${Math.floor(Math.random() * 1000)}`,
@@ -125,9 +151,12 @@ async function generateImages(keywords) {
                      alt="生成的图片" 
                      onerror="this.src='https://via.placeholder.com/800x600/cccccc/666666?text=图片加载失败'"
                      loading="lazy">
-                <div class="image-keywords">${keywords.join(' · ')}</div>
+                <div class="overlay" style="background-color: ${colorTheme};"></div>
             </div>
         `).join('');
+
+        // 生成音色联觉动态色彩部分
+        generateDynamicColorSection(colorTheme);
 
         return imageUrls;
     } catch (error) {
@@ -136,6 +165,59 @@ async function generateImages(keywords) {
         return [];
     }
 }
+
+// 生成音色联觉动态色彩部分
+function generateDynamicColorSection(color) {
+    const dynamicColorSection = document.createElement('div');
+    dynamicColorSection.className = 'dynamic-color-section';
+    dynamicColorSection.style.position = 'relative';
+    dynamicColorSection.style.width = '100%';
+    dynamicColorSection.style.height = '50vh'; // 设置容器高度为网页的一半
+    dynamicColorSection.style.overflow = 'hidden'; // 防止圆形溢出
+    dynamicColorSection.style.marginTop = '20px'; // 添加顶部间距
+
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.innerText = '音色联觉动态色彩';
+    title.style.textAlign = 'center';
+    title.style.fontWeight = 'bold';
+    dynamicColorSection.appendChild(title);
+
+    const numberOfCircles = 30; // 圆形数量
+
+    for (let i = 0; i < numberOfCircles; i++) {
+        const circle = document.createElement('div');
+        circle.className = 'dynamic-circle';
+        circle.style.backgroundColor = color; // 设置圆形颜色
+        circle.style.position = 'absolute';
+        circle.style.borderRadius = '50%';
+        circle.style.animation = `move ${Math.random() * 2 + 1}s infinite alternate`; // 动画时间随机
+        circle.style.width = `${Math.random() * 50 + 30}px`; // 随机大小，放大
+        circle.style.height = circle.style.width; // 保持圆形
+
+        // 随机位置
+        const x = Math.random() * 100; // 0% - 100%
+        const y = Math.random() * 100; // 0% - 100%
+        circle.style.left = `${x}%`;
+        circle.style.top = `${y}%`;
+
+        dynamicColorSection.appendChild(circle);
+    }
+
+    // 将动态色彩部分添加到页面底部
+    const generatedImages = document.getElementById('generatedImages');
+    generatedImages.appendChild(dynamicColorSection);
+}
+
+// CSS 动画
+const style = document.createElement('style');
+style.innerHTML = `
+    @keyframes move {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-20px); } /* 向上移动20px */
+    }
+`;
+document.head.appendChild(style);
 
 // 分析按钮点击事件
 document.getElementById('analyzeBtn').addEventListener('click', async function() {
