@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音乐风格可视化</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>音乐风格可视化</h1>
+        
+        <div class="upload-section">
+            <input type="file" id="audioInput" accept="audio/*">
+            <button id="analyzeBtn">分析音乐</button>
+            <p id="loadingText" style="display: none;">正在处理，请稍候...</p>
+        </div>
+
+        <div id="player" class="audio-player">
+            <audio id="audioPlayer" preload="auto"></audio>
+            <div class="player-status" id="player-status">未选择文件</div>
+            <div class="player-controls">
+                <input type="range" id="progressBar" min="0" value="0" step="0.1">
+                <div class="music-controls">
+                    <button class="play-btn" onclick="playMusic()">播放</button>
+                    <button class="pause-btn" onclick="pauseMusic()">暂停</button>
+                    <span class="time-display" id="time-display">00:00 / 00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="styleResults" class="results" style="display: none;">
+            <h2>识别到的风格:</h2>
+            <div id="styleKeywords" class="keywords"></div>
+        </div>
+
+        <div id="imageResults" class="image-gallery" style="display: none;">
+            <h2>生成的意境图片:</h2>
+            <div id="generatedImages" class="images"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
